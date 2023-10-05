@@ -2,6 +2,8 @@ package br.com.apiauthjwt.auth.security;
 
 import java.io.IOException;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
@@ -15,9 +17,14 @@ public class MyFIlter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
-		System.out.println("Debug - requesicao passou pelo filtro");
-		
+		Authentication auth = TokenUtil.decodeToken(request);
+		if (auth != null) {
+			if (TokenUtil.decodeToken(request) != null) {
+				// se o meu "token" for valida eu passo a requesicao para frente, indicando que ela esta autenticada
+				SecurityContextHolder.getContext().setAuthentication(null);
+			}
+		}
+
 		//passa a requesição
 		filterChain.doFilter(request, response);
 		
