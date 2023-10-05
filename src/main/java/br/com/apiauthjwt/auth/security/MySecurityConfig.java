@@ -13,20 +13,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class MySecurityConfig {
 	
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-		//quem e liberado, quem e blloqueado e qual o filtro vai fazer tratamento 
-		http.csrf().disable()             //desabilto o crsf(porque eu vou tratar a autenticacao
-			.authorizeHttpRequests()            //agora as requisao http sao passiveis de autorizacao
-			.requestMatchers(HttpMethod.GET, "/free").permitAll()
-			.anyRequest().authenticated().and().cors(); // todas as outras urls tesao nescessidade de autenticacao e sofrerao restricao do cors
-		
-		http.addFilterBefore(new MyFIlter(), UsernamePasswordAuthenticationFilter.class);
-		
-		return http.build();
-		
-		
-		
-		
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	    //quem é liberado, quem é bloqueado e qual o filtro vai fazer tratamento 
+	    http.csrf().disable()             
+	        .authorizeRequests()            //corrigido aqui
+	        .requestMatchers(HttpMethod.GET, "/free").permitAll()
+	        .anyRequest().authenticated().and().cors(); 
+
+	    http.addFilterBefore(new MyFilter(), UsernamePasswordAuthenticationFilter.class);
+
+	    return http.build();
 		
 	}
  
